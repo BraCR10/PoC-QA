@@ -1,13 +1,15 @@
 #include <cstdio>
+#include "storage/storage_driver.h"
 #include "storage/key_store.h"
 #include "connectivity/network.h"
 #include "connectivity/mqtt.h"
 
 int main() {
     uint32_t t = 0;
+    StorageDriver storage("keystore.bin");
     Network  net;
     Mqtt     mqtt;
-    KeyStore keys;
+    KeyStore keys(storage);
 
     net.onChange = [&](Network::State s) {
         if (s == Network::ON) mqtt.connect("broker.local");

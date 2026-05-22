@@ -1,13 +1,14 @@
 #pragma once
-#include <cstdint>
+#include "storage_driver.h"
 
-struct KeyStore {
-    bool   add(const char* pin, uint8_t id);
-    bool   remove(uint8_t id);
+class KeyStore {
+public:
+    explicit KeyStore(StorageDriver& drv);
+    bool   add(const char* pin, uint8_t slot);
+    bool   remove(uint8_t slot);
     int8_t verify(const char* pin) const;
 
 private:
-    struct Slot { uint64_t hash; uint8_t id; bool active; };
-    Slot slots[8]{};
+    StorageDriver& drv_;
     static uint64_t hash(const char* s);
 };
