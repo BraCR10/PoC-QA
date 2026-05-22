@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(smart_lock
     main.cpp
+    storage/storage_driver.cpp
+    storage/key_store.cpp
     connectivity/network.cpp
     connectivity/mqtt.cpp
 )
