@@ -1,10 +1,10 @@
 name: SonarQube
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   build:
     name: Analyze
@@ -12,7 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
+
+      - name: Install tools
+        run: sudo apt-get install -y cmake g++
+
+      - name: Install build-wrapper
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
+
+      - name: Build
+        run: |
+          cmake -S smart_lock -B build
+          build-wrapper-linux-x86-64 --out-dir build/bw-output cmake --build build
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
